@@ -1,19 +1,8 @@
-// App.js
-
-import { useAuth } from 'react-oidc-context';
+// src/App.js
+import { useAuthLogic } from './utils/auth';
 
 function App() {
-  const auth = useAuth();
-
-  const signOutRedirect = () => {
-    const clientId = '3dv5arkihtc4hdhnooebfmvvkd';
-    const logoutUri = 'http://localhost:5173/';
-    const cognitoDomain =
-      'https://us-east-15blwykr6o.auth.us-east-1.amazoncognito.com';
-    window.location.href = `${cognitoDomain}/logout?client_id=${clientId}&logout_uri=${encodeURIComponent(
-      logoutUri
-    )}`;
-  };
+  const { auth, signOutRedirect } = useAuthLogic();
 
   if (auth.isLoading) {
     return <div>Loading...</div>;
@@ -31,7 +20,7 @@ function App() {
         <pre> Access Token: {auth.user?.access_token} </pre>
         <pre> Refresh Token: {auth.user?.refresh_token} </pre>
 
-        <button onClick={() => auth.removeUser()}>Sign out</button>
+        <button onClick={() => signOutRedirect()}>Sign out</button>
       </div>
     );
   }
@@ -39,7 +28,6 @@ function App() {
   return (
     <div>
       <button onClick={() => auth.signinRedirect()}>Sign in</button>
-      <button onClick={() => signOutRedirect()}>Sign out</button>
     </div>
   );
 }
